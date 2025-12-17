@@ -35,6 +35,7 @@ const ItemDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -58,6 +59,9 @@ const ItemDetail: React.FC = () => {
 
       const favorites = JSON.parse(localStorage.getItem('favoriteMovies') || '[]');
       setIsFavorite(favorites.includes(id));
+
+      const ratings = JSON.parse(localStorage.getItem('movieRatings') || '{}');
+      setRating(ratings[id] || 0);
     }
   }, [id]);
 
@@ -85,6 +89,13 @@ const ItemDetail: React.FC = () => {
     setIsFavorite(!isFavorite);
   };
 
+  const handleRating = (newRating: number) => {
+    setRating(newRating);
+    const ratings = JSON.parse(localStorage.getItem('movieRatings') || '{}');
+    ratings[id!] = newRating;
+    localStorage.setItem('movieRatings', JSON.stringify(ratings));
+  };
+
   if (loading) return <div>Loading...</div>;
   if (!item || item.Response === 'False') return <div>Film non trouvé</div>;
 
@@ -104,6 +115,19 @@ const ItemDetail: React.FC = () => {
       <button onClick={toggleFavorite}>
         {isFavorite ? '⭐ Favori' : '☆ Ajouter aux favoris'}
       </button>
+      <br />
+      <div>
+        <p>Note: {rating}/5</p>
+        {[1, 2, 3, 4, 5].map(num => (
+          <span
+            key={num}
+            onClick={() => handleRating(num)}
+            style={{ cursor: 'pointer', fontSize: '24px', marginRight: '5px' }}
+          >
+            {num <= rating ? '★' : '☆'}
+          </span>
+        ))}
+      </div>
       <br />
       <Link to="/items">Retour à la liste</Link>
     </div>
