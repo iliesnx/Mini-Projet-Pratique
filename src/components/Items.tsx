@@ -36,6 +36,9 @@ const Items: React.FC = () => {
       <ul>
         {items.map(item => (
           <li key={item.imdbID}>
+            {item.Poster && item.Poster !== 'N/A' && (
+              <img src={item.Poster} alt={item.Title} style={{ width: '50px', height: '75px', marginRight: '10px', verticalAlign: 'top' }} />
+            )}
             <Link to={`/items/${item.imdbID}`}>{item.Title} ({item.Year})</Link>
           </li>
         ))}
