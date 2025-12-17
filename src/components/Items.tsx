@@ -14,7 +14,7 @@ const Items: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://www.omdbapi.com/?s=batman&apikey=c5fa73d5')
+    fetch('http://www.omdbapi.com/?s=naruto&apikey=c5fa73d5')
       .then(response => response.json())
       .then(data => {
         if (data.Search) {
