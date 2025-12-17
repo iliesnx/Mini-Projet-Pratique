@@ -33,6 +33,7 @@ const ItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -49,6 +50,25 @@ const ItemDetail: React.FC = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (id) {
+      const likedMovies = JSON.parse(localStorage.getItem('likedMovies') || '[]');
+      setLiked(likedMovies.includes(id));
+    }
+  }, [id]);
+
+  const toggleLike = () => {
+    const likedMovies = JSON.parse(localStorage.getItem('likedMovies') || '[]');
+    if (liked) {
+      const updated = likedMovies.filter((movieId: string) => movieId !== id);
+      localStorage.setItem('likedMovies', JSON.stringify(updated));
+    } else {
+      likedMovies.push(id);
+      localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
+    }
+    setLiked(!liked);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (!item || item.Response === 'False') return <div>Film non trouvé</div>;
 
@@ -62,6 +82,10 @@ const ItemDetail: React.FC = () => {
       <p><strong>Résumé:</strong> {item.Plot}</p>
       <p><strong>Note IMDb:</strong> {item.imdbRating}</p>
       {item.Poster && <img src={item.Poster} alt={item.Title} />}
+      <button onClick={toggleLike}>
+        {liked ? '❤️ Aimé' : '🤍 Aimer'}
+      </button>
+      <br />
       <Link to="/items">Retour à la liste</Link>
     </div>
   );
