@@ -34,6 +34,7 @@ const ItemDetail: React.FC = () => {
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -54,6 +55,9 @@ const ItemDetail: React.FC = () => {
     if (id) {
       const likedMovies = JSON.parse(localStorage.getItem('likedMovies') || '[]');
       setLiked(likedMovies.includes(id));
+
+      const favorites = JSON.parse(localStorage.getItem('favoriteMovies') || '[]');
+      setIsFavorite(favorites.includes(id));
     }
   }, [id]);
 
@@ -67,6 +71,18 @@ const ItemDetail: React.FC = () => {
       localStorage.setItem('likedMovies', JSON.stringify(likedMovies));
     }
     setLiked(!liked);
+  };
+
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem('favoriteMovies') || '[]');
+    if (isFavorite) {
+      const updated = favorites.filter((movieId: string) => movieId !== id);
+      localStorage.setItem('favoriteMovies', JSON.stringify(updated));
+    } else {
+      favorites.push(id);
+      localStorage.setItem('favoriteMovies', JSON.stringify(favorites));
+    }
+    setIsFavorite(!isFavorite);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -84,6 +100,9 @@ const ItemDetail: React.FC = () => {
       {item.Poster && <img src={item.Poster} alt={item.Title} />}
       <button onClick={toggleLike}>
         {liked ? '❤️ Aimé' : '🤍 Aimer'}
+      </button>
+      <button onClick={toggleFavorite}>
+        {isFavorite ? '⭐ Favori' : '☆ Ajouter aux favoris'}
       </button>
       <br />
       <Link to="/items">Retour à la liste</Link>
