@@ -7,6 +7,8 @@ const Home: React.FC = () => {
       <h1>Bienvenue dans le Catalogue de Contenus</h1>
       <p>Découvrez des films et séries.</p>
       <Link to="/items">Voir les éléments</Link>
+      <br />
+      <Link to="/contact">Contact</Link>
     </div>
   );
 };
